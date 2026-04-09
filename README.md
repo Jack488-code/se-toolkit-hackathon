@@ -48,8 +48,8 @@ A Telegram bot that turns a list of terms into smart flashcards and teaches them
 2. Send `/start` to register
 3. Send `/add` and follow the prompts:
    - Enter a deck title (e.g. "Biology Final")
-   - Enter terms (one per line)
-4. The bot generates flashcards via LLM
+   - Enter terms with definitions, one per line: `term - definition`
+4. Flashcards are created from your definitions
 5. Send `/study` to start a review session
 6. Rate each answer 0-5 (how well you knew it)
 7. SRS schedules your next review optimally
@@ -103,7 +103,7 @@ A Telegram bot that turns a list of terms into smart flashcards and teaches them
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/<your-username>/se-toolkit-hackathon.git
+   git clone https://github.com/Jack488-code/se-toolkit-hackathon.git
    cd se-toolkit-hackathon
    ```
 
