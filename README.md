@@ -2,6 +2,8 @@
 
 A Telegram bot that turns a list of terms into smart flashcards and teaches them using spaced repetition.
 
+**Try it:** [t.me/flashcrdbot](https://t.me/flashcrdbot)
+
 ## Product Context
 
 - **End users:** Students preparing for exams who need to memorize terms and definitions efficiently.

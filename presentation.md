@@ -68,6 +68,6 @@
 | Resource | Link | QR Code |
 |---|---|---|
 | GitHub Repo | https://github.com/Jack488-code/se-toolkit-hackathon | Generate QR |
-| Deployed Bot | Telegram: @flashcrdbot | Generate QR |
+| Deployed Bot | [t.me/flashcrdbot](https://t.me/flashcrdbot) | Generate QR |
 
 > **Generate QR codes at:** https://www.qr-code-generator.com/
