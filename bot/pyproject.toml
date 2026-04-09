@@ -1,0 +1,10 @@
+[project]
+name = "flashcard-bot"
+version = "0.1.0"
+description = "Flashcard Bot Telegram client"
+requires-python = ">=3.12"
+dependencies = [
+    "aiogram>=3.13.0",
+    "httpx>=0.27.0",
+    "pydantic-settings>=2.0.0",
+]

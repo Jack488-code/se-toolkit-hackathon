@@ -1,153 +1,162 @@
-# Lab 9 - Quiz and Hackathon
+# Flashcard Bot
 
-Lab opens with a quiz and then kicks off the hackathon.
+A Telegram bot that turns a list of terms into smart flashcards and teaches them using spaced repetition.
 
-To get the full point for the lab, you need to:
-- Pass Tasks 1, 2, 3 during the lab AND 
-- Finish Task 4 and 5 by the usual deadline of Thursday 23:59.
+## Demo
 
-Each student builds their own project:
-- Go from an idea to a deployed product.
-- Use agents and LLMs throughout.
+![Demo: Creating a deck](https://via.placeholder.com/400x200/4CAF50/FFFFFF?text=Flashcard+Bot+-+Creating+a+Deck)
+![Demo: Study session](https://via.placeholder.com/400x200/2196F3/FFFFFF?text=Flashcard+Bot+-+Study+Session)
 
-----
+> *Replace with actual screenshots of your running bot.*
 
-## Task 1 (graded by TA after the lab).
-Pen and paper quiz:
-- 20 mins;
-- closed book, no devices;
-- you get random 3 questions from the question bank;
-- answer at least 2.
+## Product Context
 
-## Task 2 (approved by TA during the lab).
+- **End users:** Students preparing for exams who need to memorize terms and definitions efficiently.
+- **Problem:** Students waste time on rote memorization with paper flashcards or basic apps that don't optimize review timing.
+- **Solution:** The bot auto-generates flashcards from a list of terms (using LLM) and shows them in optimal order via a Spaced Repetition System (SRS, SM-2 algorithm), so students learn faster and retain longer.
 
-Ideate and plan your project.
+## Features
 
+### Implemented (Version 1 & 2)
 
-### Project idea
-The project idea must be:
-- something simple to build;
-- clearly useful;
-- easy to explain.
+| Feature | Status |
+|---|---|
+| User registration via `/start` | ✅ |
+| Create deck from terms (`/add`) | ✅ |
+| LLM-powered flashcard generation (OpenRouter/Qwen) | ✅ |
+| SRS study sessions (`/study`) with SM-2 algorithm | ✅ |
+| List decks (`/decks`) | ✅ |
+| CLI test mode (`--test`) | ✅ |
+| PostgreSQL persistence | ✅ |
+| Docker Compose deployment | ✅ |
 
-Define and show to your TA:
-- End-user of the product
-- Which problem your product solves for the end-user / what is its core feature?
-- The product idea in one short sentence
+### Not yet implemented
 
-### Implementation plan
+| Feature | Notes |
+|---|---|
+| Inline keyboard buttons for rating | Currently uses text input (0-5) |
+| Deck deletion and editing | — |
+| Study statistics and progress tracking | — |
+| Shared/public decks | — |
+| Web dashboard | — |
 
-When the idea is approved, produce a plan for two product versions.
+## Usage
 
-Version 1 does one core thing well:
-- Pick one feature most valuable to the end-user and relatively easy to implement;
-- It is a functioning product, not a prototype;
-- Needs to be shown to the TA upon completion for feedback.
+### As a Telegram user
 
-Version 2 builds upon Version 1:
-- improves the initial feature, or adds another one on top;
-- address TA feedback from the lab;
-- deploy and make it available to use.
+1. Open the bot in Telegram
+2. Send `/start` to register
+3. Send `/add` and follow the prompts:
+   - Enter a deck title (e.g. "Biology Final")
+   - Enter terms (one per line)
+4. The bot generates flashcards via LLM
+5. Send `/study` to start a review session
+6. Rate each answer 0-5 (how well you knew it)
+7. SRS schedules your next review optimally
 
-The product must have these components each fulfilling a useful function: 
-- backend;
-- database;
-- end-user-facing client: web app, mobile app, or LLM-powered agent, e.g. `nanobot`.
+### Bot commands
 
-Note:
-- You can use the setup from Lab 8 or start from scratch.
-- `Telegram` bots are being blocked on university VMs.
+| Command | Description |
+|---|---|
+| `/start` | Register and get help |
+| `/add` | Create a new flashcard deck |
+| `/decks` | List your decks |
+| `/study` | Start a study session |
+| `/help` | Show help message |
 
-## Task 3 (approved by TA during the lab).
+## Architecture
 
-Implement Version 1 outlined in the plan:
-- Build one core feature;
-- Follow best practices and git workflow;
-- Test it yourself and fix bugs;
-- Have the TA try it as a user;
-- Take note of the TA feedback;
-- Get TA's approval for the task to be marked as DONE.
+```
+┌─────────────┐       ┌──────────────┐       ┌──────────────┐
+│  Telegram   │──────▶│  Telegram    │──────▶│  FastAPI     │
+│  User       │◀──────│  Bot (aiogram)│◀──────│  Backend     │
+└─────────────┘       └──────────────┘       └──────┬───────┘
+                                                    │
+                                             ┌──────▼───────┐
+                                             │  PostgreSQL  │
+                                             └──────────────┘
+                                                    ▲
+                                             ┌──────┴───────┐
+                                             │  OpenRouter  │
+                                             │  (LLM API)   │
+                                             └──────────────┘
+```
 
+**Components:**
+- **Backend (FastAPI):** REST API for deck/card management, SRS logic, LLM integration
+- **Bot (aiogram):** Telegram transport layer, delegates logic to backend via API
+- **Database (PostgreSQL):** Users, decks, cards, SRS progress
+- **LLM (OpenRouter/Qwen):** Generates flashcard questions from raw terms
 
-## Task 4
+## Deployment
 
-Implement and deploy Version 2 outlined in the plan:
-- Build and polish functionality;
-- Take TA feedback into account;
-- Push all code to the github repo (see the detailed instructions below);
-- Follow best practices and git workflow;
-- Document your solution;
-- Dockerize all services;
-- Deploy it to be accessible to use.
+### Requirements
 
-Version 2 can be done during the lab or after the lab before the usual deadline.
+- **OS:** Ubuntu 24.04 (or any Linux with Docker)
+- **Installed:** Docker 24+, Docker Compose 2.x
+- **Obtained:**
+  - Telegram Bot Token (from [@BotFather](https://t.me/BotFather))
+  - OpenRouter API Key (optional, from [openrouter.ai](https://openrouter.ai)) — without it, trivial fallback flashcards are generated
 
+### Step-by-step
 
-## Task 5 (demo and pdf submitted through moodle)
-Submit presentation with five slides:
+1. **Clone the repository:**
 
-1. Title:
-  - Product title
-  - Your name
-  - Your university email
-  - Your group
+   ```bash
+   git clone https://github.com/<your-username>/se-toolkit-hackathon.git
+   cd se-toolkit-hackathon
+   ```
 
-2. Context:
-  - End-user of the product
-  - Which problem your product solves
-  - The product idea in one short sentence
+2. **Create `.env` file:**
 
-3. Implementation:
-  - How you built the product
-  - What went into Version 1 and Version 2
-  - What TA feedback points you addressed
+   ```bash
+   cp .env.example .env
+   ```
 
-4. Demo:
-  - Pre-recorded video demonstration of Product version 2 with pre-recorded voice commentary (no longer than 2 minutes).
-  - _Note:_ **This is the most important part of the presentation**.
+   Edit `.env` and set:
 
-5. Links:
-  - Link and QR code for each of these:
-    - The GitHub repo with the product code
-    - Deployed product (latest version)
+   ```env
+   BOT_TOKEN=your-actual-telegram-token
+   OPENROUTER_API_KEY=your-openrouter-key   # optional
+   ```
 
-----
+3. **Start all services:**
 
-## Publishing the product code on GitHub
+   ```bash
+   docker compose up -d --build
+   ```
 
-- Publish the product code in a repository on `GitHub`.
+   This starts:
+   - PostgreSQL on internal network
+   - Backend on `http://localhost:8000`
+   - Telegram bot (polling)
 
-  The repository name must be called `se-toolkit-hackathon`.
+4. **Verify the backend:**
 
-- Add the MIT license file to make your product open-source.
+   ```bash
+   curl http://localhost:8000/health
+   # Expected: {"status": "ok"}
+   ```
 
-- Add `README.md` in the product repository.
+5. **Test the bot CLI (no Telegram needed):**
 
-  `README.md` structure:
+   ```bash
+   docker compose exec bot python -m bot --test
+   ```
 
-  - Product name (as title)
+6. **View logs:**
 
-  - One-line description
+   ```bash
+   docker compose logs -f bot
+   docker compose logs -f backend
+   ```
 
-  - Demo:
-    - A couple of relevant screenshots of the product
+7. **Stop services:**
 
-  - Product context:
+   ```bash
+   docker compose down
+   ```
 
-    - End users
-    - Problem that your product solves for end users
-    - Your solution
+### API Documentation
 
-  - Features:
-
-    - Implemented and not not yet implemented features
-
-  - Usage:
-
-    - Explain how to use your product
-
-  - Deployment:
-
-    - Which OS the VM should run (you may assume `Ubuntu 24.04` like on your university VMs)
-    - What should be installed on the VM
-    - Step-by-step deployment instructions
+Once running, visit `http://localhost:8000/docs` for interactive Swagger UI.
